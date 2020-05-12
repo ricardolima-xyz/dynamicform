@@ -1,5 +1,6 @@
 <?php
 require_once "custominputitem.class.php";
+require_once "dynamicformvalidationerror.class.php";
 
 class CustomInputItemArray extends CustomInputItem
 {
@@ -100,6 +101,11 @@ class CustomInputItemArray extends CustomInputItem
     public function validate()
     {
         $validationErrors = array();
+        $atLeastOneIsEmpty = false;
+        foreach ($this->content as $arrayItem)
+            if ($arrayItem == '') $atLeastOneIsEmpty = true;
+		if ($this->mandatory && $atLeastOneIsEmpty)
+			$validationErrors[] = DynamicFormValidationError::MANDATORY;
         return $validationErrors;
     }
 

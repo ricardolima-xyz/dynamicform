@@ -1,6 +1,7 @@
 <?php
 require_once "custominputhelper.class.php";
 require_once "custominputitem.class.php";
+require_once "dynamicformvalidationerror.class.php";
 
 class CustomInputItemFile extends CustomInputItem
 {
@@ -155,7 +156,47 @@ class CustomInputItemFile extends CustomInputItem
 
     public function validate()
     {
+        // If a file has already been uploaded, we assume it has already been validated
+        if ($this->content != '') return array();
+
         $validationErrors = array();
+        $file_error = false;
+        /*
+			// Validation - No file sent on mandatory fields (Error code 4 = no file specified)
+					if ($item->mandatory && $files['error'][$i] == 4)
+					{
+						$validation_errors[$i] = self::CUSTOM_INPUT_VALIDATION_ERROR_MANDATORY;
+						$file_error = true;
+					}
+					// Validation - Other server errors (Error code 0 = no error / Error code 4 = no file specified, dealed with above)
+					if ($files['error'][$i] != 0 && $files['error'][$i] != 4) 
+					{
+						$validation_errors[$i] = self::CUSTOM_INPUT_VALIDATION_ERROR_FILE_ERROR;
+						$file_error = true;
+					}
+					// Validation - Maximum file size (1 megabyte = 1048576 bytes)
+					if ($files['error'][$i] == 0 && $item->spec->max_size && $files['size'][$i] > $item->spec->max_size * 1048576)
+					{
+						$validation_errors[$i] = self::CUSTOM_INPUT_VALIDATION_ERROR_FILE_EXCEEDED_SIZE;
+						$file_error = true;
+					}
+					// Validation - File type				
+					if ($files['error'][$i] == 0 && !empty($item->spec->file_types) && !in_array($files['type'][$i], $item->spec->file_types))
+					{
+						$validation_errors[$i] = self::CUSTOM_INPUT_VALIDATION_ERROR_FILE_WRONG_TYPE;					
+						$file_error = true;
+					}
+					if ($files['error'][$i] == 0 && $file_error == false)
+					{
+						$random_filename = md5(uniqid(rand(), true)); // Generating a random filename
+						$extension = pathinfo($files['name'][$i], PATHINFO_EXTENSION);
+						if (move_uploaded_file($files['tmp_name'][$i], "$upload_directory$random_filename.$extension"))
+							$content[$i] = "$upload_directory$random_filename.$extension";
+						else
+							$validation_errors[$i] = self::CUSTOM_INPUT_VALIDATION_ERROR_FILE_UPLOAD_ERROR;
+						break;
+					}
+        */
         return $validationErrors;
     }
 

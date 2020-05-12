@@ -142,6 +142,11 @@ class CustomInput
     function validate()
     {
         $validationErrors = array();
+        foreach($this->structure as $i => $structureItem)
+        {
+            $validationMessages = $structureItem->validate();
+            if (!empty($validationMessages)) $validationErrors[$i] = $validationMessages;
+        }
         return $validationErrors;
     }
 

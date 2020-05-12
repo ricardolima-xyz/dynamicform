@@ -1,5 +1,6 @@
 <?php
 require_once "custominputitem.class.php";
+require_once "dynamicformvalidationerror.class.php";
 
 class CustomInputItemEnum extends CustomInputItem
 {
@@ -101,6 +102,8 @@ class CustomInputItemEnum extends CustomInputItem
     public function validate()
     {
         $validationErrors = array();
+        if ($this->mandatory && $this->content == '')
+            $validationErrors[] = DynamicFormValidationError::MANDATORY;
         return $validationErrors;
     }
 

@@ -1,5 +1,6 @@
 <?php
 require_once "custominputitem.class.php";
+require_once "dynamicformvalidationerror.class.php";
 
 class CustomInputItemBigtext extends CustomInputItem
 {
@@ -130,6 +131,12 @@ class CustomInputItemBigtext extends CustomInputItem
     public function validate()
     {
         $validationErrors = array();
+        if ($this->mandatory && $this->content == '')
+            $validationErrors[] = DynamicFormValidationError::MANDATORY;
+		if ($this->spec->min_words && preg_match_all("/\S+/", $this->content) < $this->spec->min_words)
+			$validationErrors[] = DynamicFormValidationError::UNDER_MIN_WORDS;
+		if ($this->spec->max_words && preg_match_all("/\S+/", $this->content) > $this->spec->max_words)
+			$validationErrors[] = DynamicFormValidationError::OVER_MAX_WORDS;
         return $validationErrors;
     }
 
