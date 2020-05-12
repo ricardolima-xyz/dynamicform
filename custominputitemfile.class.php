@@ -5,6 +5,8 @@ require_once "custominputitem.class.php";
 class CustomInputItemFile extends CustomInputItem
 {
 
+    private $uploadedFile;
+
     public static function getType()
     {
         return 'file'; 
@@ -151,12 +153,22 @@ class CustomInputItemFile extends CustomInputItem
         return $result;
     }
 
+    public function validate()
+    {
+        $validationErrors = array();
+        return $validationErrors;
+    }
+
     function __construct($object, $content)
 	{
         parent::__construct($object, $content);
         $this->type = self::getType();
         if (is_null ($content)) {
             $this->content =  '';
+        }
+        else if (is_array($content)) {
+            $this->uploadedFile = $content;
+            $this->content = '';
         }
         else {
             $this->content = $content;

@@ -141,7 +141,8 @@ class CustomInput
      */
     function validate()
     {
-
+        $validationErrors = array();
+        return $validationErrors;
     }
 
     /**
@@ -164,12 +165,26 @@ class CustomInput
         // Creating CustomInputItem's array
         $this->structure = array();
 
+        // Reading $files and organizing its information
+        $newFiles = null;
+        if (is_array($files))
+        {
+            $newFiles = array();
+            foreach ($files as $file_field => $file_info)
+                foreach ($file_info as $index => $info)
+                    $newFiles[$index][$file_field] = $info;
+        }
+        // TODO Remove
+        var_dump($newFiles);
+
         // Populating CustomInputItems array if a structure is passed
         if (!empty($structure)) {
             foreach (json_decode($structure) as $i => $structureItem) {
                 foreach ($this->customInputItemClasses as $customInputItemClass) {
                     if ($customInputItemClass::getType() == $structureItem->type) {
-                        $content_item = (isset($content) && isset($content[$i])) ? $content[$i] : null;
+                        $content_item = null;
+                        if (isset($content[$i])) $content_item = $content[$i];
+                        else if (isset($newFiles[$i])) $content_item = $newFiles[$i];
                         $this->structure[] = new $customInputItemClass($structureItem, $content_item);                        
                     }
                 }

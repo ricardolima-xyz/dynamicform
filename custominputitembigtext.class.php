@@ -127,6 +127,12 @@ class CustomInputItemBigtext extends CustomInputItem
         return $result;
     }
 
+    public function validate()
+    {
+        $validationErrors = array();
+        return $validationErrors;
+    }
+
     function __construct($object, $content)
 	{
         parent::__construct($object, $content);

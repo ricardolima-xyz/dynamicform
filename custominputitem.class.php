@@ -24,6 +24,7 @@ abstract class CustomInputItem
     public abstract static function javascriptEditMethod();
     public abstract static function outputCustomInputStructureAddButton($html_id);
     public abstract function outputControls($htmlName, $index, $active);
+    public abstract function validate();
     
     function __construct($object, $content = null)
 	{
