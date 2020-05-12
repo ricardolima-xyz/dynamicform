@@ -125,6 +125,25 @@ class CustomInput
         return $result;        
     }
 
+    /** 
+     * Performs the validation of the content on Dynamic Form. If there is file information, 
+     * it will try to upload the files to upload folder and update the content with the
+     * uploaded file path.
+     * 
+     * This function returns an array with pairs of indexes and error codes. The indexes are
+     * in the order of the structure elements (from 0 to n-1). The error codes are constants
+     * defined in the class DynamicFormValidationError.
+     * 
+     * Notice that this function can upload a file to server if all the validations for this
+     * field are successful and still return validation errors for other fields.
+     * 
+     * If the validation is successful, an empty array is returned.
+     */
+    function validate()
+    {
+
+    }
+
     /**
      * DynamicForm constructor
      * 
