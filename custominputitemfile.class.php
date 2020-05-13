@@ -160,43 +160,41 @@ class CustomInputItemFile extends CustomInputItem
         if ($this->content != '') return array();
 
         $validationErrors = array();
-        $file_error = false;
-        /*
-			// Validation - No file sent on mandatory fields (Error code 4 = no file specified)
-					if ($item->mandatory && $files['error'][$i] == 4)
-					{
-						$validation_errors[$i] = self::CUSTOM_INPUT_VALIDATION_ERROR_MANDATORY;
-						$file_error = true;
-					}
-					// Validation - Other server errors (Error code 0 = no error / Error code 4 = no file specified, dealed with above)
-					if ($files['error'][$i] != 0 && $files['error'][$i] != 4) 
-					{
-						$validation_errors[$i] = self::CUSTOM_INPUT_VALIDATION_ERROR_FILE_ERROR;
-						$file_error = true;
-					}
-					// Validation - Maximum file size (1 megabyte = 1048576 bytes)
-					if ($files['error'][$i] == 0 && $item->spec->max_size && $files['size'][$i] > $item->spec->max_size * 1048576)
-					{
-						$validation_errors[$i] = self::CUSTOM_INPUT_VALIDATION_ERROR_FILE_EXCEEDED_SIZE;
-						$file_error = true;
-					}
-					// Validation - File type				
-					if ($files['error'][$i] == 0 && !empty($item->spec->file_types) && !in_array($files['type'][$i], $item->spec->file_types))
-					{
-						$validation_errors[$i] = self::CUSTOM_INPUT_VALIDATION_ERROR_FILE_WRONG_TYPE;					
-						$file_error = true;
-					}
-					if ($files['error'][$i] == 0 && $file_error == false)
-					{
-						$random_filename = md5(uniqid(rand(), true)); // Generating a random filename
-						$extension = pathinfo($files['name'][$i], PATHINFO_EXTENSION);
-						if (move_uploaded_file($files['tmp_name'][$i], "$upload_directory$random_filename.$extension"))
-							$content[$i] = "$upload_directory$random_filename.$extension";
-						else
-							$validation_errors[$i] = self::CUSTOM_INPUT_VALIDATION_ERROR_FILE_UPLOAD_ERROR;
-						break;
-					}
-        */
+
+        //TODO Remove
+        //echo "file item info: ";var_dump($this);
+        //echo '$this->uploadedFile[\'error\']'; var_dump($this->uploadedFile['error']);
+
+        // No file sent on a mandatory field (Error # 4 = no file specified)
+        if ($this->mandatory && $this->uploadedFile['error'] == 4)
+		{
+			$validationErrors[] = DynamicFormValidationError::MANDATORY;
+        }
+        // Other server errors (Error # 0 = no error / Error # 4 = no file specified, dealt with above)
+        if ($this->uploadedFile['error'] != 0 && $this->uploadedFile['error'] != 4) 
+		{
+			$validationErrors[] = DynamicFormValidationError::FILE_ERROR;
+        }
+        // Checking maximum file size (1 megabyte = 1048576 bytes)
+		if ($this->uploadedFile['error'] == 0 && $this->spec->max_size && $this->uploadedFile['size'] > $this->spec->max_size * 1048576)
+		{
+			$validationErrors[] = DynamicFormValidationError::FILE_EXCEEDED_SIZE;
+		}
+		// Checking file type				
+		if ($this->uploadedFile['error'] == 0 && !empty($this->spec->file_types) && !in_array($this->uploadedFile['type'], $this->spec->file_types))
+		{
+			$validationErrors[] = DynamicFormValidationError::FILE_WRONG_TYPE;
+        }
+        // No errors so far. Uploading file to server		
+		if ($this->uploadedFile['error'] == 0 && empty($validationErrors))
+		{
+			$randomName = md5(uniqid(rand(), true)); // Generating a random filename
+			$extension = pathinfo($this->uploadedFile['name'], PATHINFO_EXTENSION);
+			if (move_uploaded_file($this->uploadedFile['tmp_name'], "{$this->uploadedFile['upload_path']}$randomName.$extension"))
+				$this->content = "{$this->uploadedFile['upload_path']}$randomName.$extension";
+			else
+				$validationErrors[] = DynamicFormValidationError::FILE_UPLOAD_ERROR;
+		}
         return $validationErrors;
     }
 

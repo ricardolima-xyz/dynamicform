@@ -12,7 +12,7 @@
 <?php
 
 require_once '../custominput.class.php';
-$customInput = new CustomInput($_POST['s'], $_POST['c'], $_FILES['c']);
+$customInput = new CustomInput($_POST['s'], $_POST['c'], $_FILES['c'], 'upload/');
 $validationErrors = $customInput->validate();
 
 ?>

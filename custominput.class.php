@@ -157,8 +157,10 @@ class CustomInput
      * 
      * $structure - String - A JSON Description of the structure
      * $content - Array - An ordered array with the content
+     * $files - The $_FILES['$contentName'] containing the uploaded files
+     * $uploadPath - The upload path for files, if $files is not null
      */
-    function __construct($structure = null, $content = null, $files = null)
+    function __construct($structure = null, $content = null, $files = null, $uploadPath = null)
 	{
         // Loading all Declared Classes that are of type CustomInputItem
         $this->customInputItemClasses = array();
@@ -176,11 +178,13 @@ class CustomInput
         {
             $newFiles = array();
             foreach ($files as $file_field => $file_info)
-                foreach ($file_info as $index => $info)
+                foreach ($file_info as $index => $info) {
                     $newFiles[$index][$file_field] = $info;
+                    $newFiles[$index]['upload_path'] = $uploadPath;
+                }
         }
         // TODO Remove
-        var_dump($newFiles);
+        echo "uploaded files: "; var_dump($newFiles);
 
         // Populating CustomInputItems array if a structure is passed
         if (!empty($structure)) {

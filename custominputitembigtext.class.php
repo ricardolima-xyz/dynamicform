@@ -82,10 +82,19 @@ class CustomInputItemBigtext extends CustomInputItem
 
     public function outputControls($htmlName, $index, $active) {
         $result = "
+        <span>
         <label for=\"{$htmlName}[{$index}]\">{$this->description}";
-        if ($this->mandatory) $result .= "&nbsp;<small>(Obrigatório)</small>";
+        $requirements = array();
+        if ($this->mandatory) $requirements[] = "Obrigatório";
+        if ($this->spec->min_words) $requirements[] = "Min. palavras: ".$this->spec->min_words;
+        if ($this->spec->max_words) $requirements[] = "Máx. palavras: ".$this->spec->max_words;
+        if (!empty($requirements)) $result .= "&nbsp;<small>(".implode(", ", $requirements).")</small>";
         $result .= "</label>
-        <div>
+        <span id=\"bgt_inf_{$htmlName}_{$index}\" style=\"float: right; font-size: 0.8rem\">
+        <label id=\"bgt_cnt_{$htmlName}_{$index}\"></label>
+        </span>
+        </span>
+    
         <textarea name=\"{$htmlName}[{$index}]\" id=\"{$htmlName}[{$index}]\" style=\"width: 100%;\" rows=\"15\"";
         $result .= ($this->spec->min_words || $this->spec->max_words) ? " onkeyup=\"bgt_check_{$htmlName}_{$index}()\"" : "";
         $result .= ($active) ? "" : " disabled=\"disabled\"";
@@ -94,15 +103,6 @@ class CustomInputItemBigtext extends CustomInputItem
         $result .= "</textarea>";
 
         if ($this->spec->min_words || $this->spec->max_words) $result .= "
-        <div id=\"bgt_inf_{$htmlName}_{$index}\" style=\"font-size: 0.8rem\">
-        <span id=\"bgt_war_{$htmlName}_{$index}\">&#9940;</span>
-        Total de palavras: 
-        <label id=\"bgt_cnt_{$htmlName}_{$index}\">0</label> 
-        Mínimo: {$this->spec->min_words}
-        &nbsp;-&nbsp;
-        Máximo: {$this->spec->max_words}
-        </div>
-        </div>
         <script>
         function bgt_check_{$htmlName}_{$index}()
         {
@@ -113,12 +113,10 @@ class CustomInputItemBigtext extends CustomInputItem
             document.getElementById('bgt_cnt_{$htmlName}_{$index}').innerHTML = words.length;
             if(words.length < {$this->spec->min_words} || words.length > {$this->spec->max_words})
             {
-                document.getElementById('bgt_war_{$htmlName}_{$index}').style.display = 'initial';
                 document.getElementById('bgt_inf_{$htmlName}_{$index}').style.fontWeight = 'bold';
             }
             else
             {
-                document.getElementById('bgt_war_{$htmlName}_{$index}').style.display = 'none';
                 document.getElementById('bgt_inf_{$htmlName}_{$index}').style.fontWeight = 'normal';
             }
         }
