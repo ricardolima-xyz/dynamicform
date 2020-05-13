@@ -5,6 +5,14 @@ require_once "dynamicformvalidationerror.class.php";
 class CustomInputItemEnum extends CustomInputItem
 {
 
+    public function getHtmlFormattedContent()
+    {
+        $result = "<tr><td>{$this->description}</td><td>";
+        $result .= ($this->content === '') ? '' : $this->spec->items[$this->content];
+        $result .= "</td></tr>";
+        return $result;
+    }
+
     public static function getType()
     {
         return 'enum'; 
@@ -85,13 +93,13 @@ class CustomInputItemEnum extends CustomInputItem
         $result .= ($active) ? "" : " disabled=\"disabled\"";
         $result .= ">
             <option valule=\"\"";
-        $result .= ($this->content == '') ? " selected=\"selected\"" : "";
+        $result .= ($this->content === '') ? " selected=\"selected\"" : "";
         $result .= ">&gt;&gt; Selecione</option>";
         foreach ($this->spec->items as $j => $item_item)
         {
             $result .= "
             <option value=\"$j\"";
-            $result .= ($this->content == $j) ? " selected=\"selected\"" : "";
+            $result .= ($this->content === $j) ? " selected=\"selected\"" : "";
             $result .= ">$item_item</option>";
         }
         $result .= "
@@ -111,11 +119,11 @@ class CustomInputItemEnum extends CustomInputItem
 	{
         parent::__construct($object, $content);
         $this->type = self::getType();
-        if (is_null ($content)) {
+        if (is_null($content) || !is_numeric($content)) {
             $this->content =  '';
         }
         else {
-            $this->content = $content;
+            $this->content = intval($content);
         }
 	}
 

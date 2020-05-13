@@ -4,6 +4,14 @@ require_once "dynamicformvalidationerror.class.php";
 
 class CustomInputItemCheck extends CustomInputItem
 {
+    public function getHtmlFormattedContent()
+    {
+        // TODO #2 #1 CustomInputItemCheck->getHtmlFormattedContent() G11N
+        $result = "<tr><td>{$this->description}</td><td>";
+        $result .= ($this->content) ? "Sim" : "Não";
+        $result .= "</td></tr>";
+        return $result;
+    }
 
     public static function getType()
     {
@@ -100,7 +108,7 @@ class CustomInputItemCheck extends CustomInputItem
             $this->content =  0;
         }
         else {
-            $this->content = $content;
+            $this->content = intval($content);
         }
 	}
 

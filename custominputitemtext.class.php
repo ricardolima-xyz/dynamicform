@@ -5,6 +5,14 @@ require_once "dynamicformvalidationerror.class.php";
 class CustomInputItemText extends CustomInputItem
 {
 
+    public function getHtmlFormattedContent()
+    {
+        $result = "<tr><td>{$this->description}</td><td>";
+        $result .= htmlentities($this->content, ENT_QUOTES, 'utf-8');
+        $result .= "</td></tr>";
+        return $result;
+    }
+
     public static function getType()
     {
         return 'text'; 

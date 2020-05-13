@@ -20,6 +20,7 @@ abstract class CustomInputItem
         ));
     }
 
+    public abstract function getHtmlFormattedContent();
     public abstract static function getType();
     public abstract static function javascriptEditMethod();
     public abstract static function outputCustomInputStructureAddButton($html_id);

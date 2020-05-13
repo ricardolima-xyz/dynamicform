@@ -5,6 +5,15 @@ require_once "dynamicformvalidationerror.class.php";
 class CustomInputItemArray extends CustomInputItem
 {
 
+    public function getHtmlFormattedContent()
+    {
+        $result = "<tr><td>{$this->description}</td><td><ul>";
+        foreach ($this->spec->items as $j => $arrayItem)
+            $result .= "<li>{$arrayItem}: ".htmlentities($this->content[$j], ENT_QUOTES, 'utf-8')."</li>";
+        $result .= "</ul></td></tr>";
+        return $result;
+    }
+
     public static function getType()
     {
         return 'array'; 

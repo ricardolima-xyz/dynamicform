@@ -8,6 +8,14 @@ class CustomInputItemFile extends CustomInputItem
 
     private $uploadedFile;
 
+    public function getHtmlFormattedContent()
+    {
+        $result = "<tr><td>{$this->description}</td><td>";
+        $result .= "<a href=\"$this->content\">".htmlentities($this->content, ENT_QUOTES, 'utf-8')."</a>";
+        $result .= "</td></tr>";
+        return $result;
+    }
+
     public static function getType()
     {
         return 'file'; 
@@ -154,16 +162,29 @@ class CustomInputItemFile extends CustomInputItem
         return $result;
     }
 
+    // This function returns the base url of the system. This works particularly for this system
+	// since all its php codes are located on system's base folder. It depends strongly on the php
+	// code which initially calls the function, the request URI.
+    private function url()
+    {
+		//TODO: try to understand $SERVER variables to check if this routine works properly on different servers
+		$server_name = isset($_SERVER['HTTP_X_FORWARDED_SERVER']) ?  $_SERVER['HTTP_X_FORWARDED_SERVER'] : $_SERVER["SERVER_NAME"];
+		$result = sprintf("%s://%s%s", isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http', $server_name, $_SERVER['REQUEST_URI']);
+		if (true) 
+		{
+			$i = strlen($result);
+			while (substr($result, $i, 1) != "/") { $i--;}
+			$result = substr( $result, 0, $i + 1);
+		}
+		return $result;
+	}
+
     public function validate()
     {
         // If a file has already been uploaded, we assume it has already been validated
         if ($this->content != '') return array();
 
         $validationErrors = array();
-
-        //TODO Remove
-        //echo "file item info: ";var_dump($this);
-        //echo '$this->uploadedFile[\'error\']'; var_dump($this->uploadedFile['error']);
 
         // No file sent on a mandatory field (Error # 4 = no file specified)
         if ($this->mandatory && $this->uploadedFile['error'] == 4)
@@ -191,7 +212,7 @@ class CustomInputItemFile extends CustomInputItem
 			$randomName = md5(uniqid(rand(), true)); // Generating a random filename
 			$extension = pathinfo($this->uploadedFile['name'], PATHINFO_EXTENSION);
 			if (move_uploaded_file($this->uploadedFile['tmp_name'], "{$this->uploadedFile['upload_path']}$randomName.$extension"))
-				$this->content = "{$this->uploadedFile['upload_path']}$randomName.$extension";
+				$this->content = "{$this->url()}{$this->uploadedFile['upload_path']}$randomName.$extension";
 			else
 				$validationErrors[] = DynamicFormValidationError::FILE_UPLOAD_ERROR;
 		}

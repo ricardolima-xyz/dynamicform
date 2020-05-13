@@ -14,6 +14,28 @@ class CustomInput
     private $structure;
     private $customInputItemClasses;
 
+    /**
+     * Returns a human-readable HTML table with the fields and their contents
+     * 
+     * If $unrestrictOnly == true, only the unrestrict items will be shown
+     * 
+     * Optionally the parameters $htmlClass and/or $htmlId can be passed, if the table
+     * needs to be styled with css or modified with javascript. As can be deduced, if
+     * these parameters are not null, the table will be output with class="$htmlClass"
+     * and/or id="$htmlId" attributes.
+     */
+    function getHtmlFormattedContent($unrestrictOnly = false, $htmlClass = null, $htmlId = null)
+    {
+        $result = "<table";
+        if ($htmlClass !== null) $result .= " class=\"$htmlClass\"";
+        if ($htmlId !== null) $result .= " id=\"$htmlId\"";
+        $result .= ">";
+        foreach ($this->structure as $structureItem)
+            if ($structureItem->unrestrict || !$unrestrictOnly)
+                $result .= $structureItem->getHtmlFormattedContent();
+        $result .= "</table>";
+    }
+
     function getJSONStructure() {
         $result = '[';
         foreach ($this->structure as $structureItem)
@@ -183,9 +205,7 @@ class CustomInput
                     $newFiles[$index]['upload_path'] = $uploadPath;
                 }
         }
-        // TODO Remove
-        echo "uploaded files: "; var_dump($newFiles);
-
+        
         // Populating CustomInputItems array if a structure is passed
         if (!empty($structure)) {
             foreach (json_decode($structure) as $i => $structureItem) {
