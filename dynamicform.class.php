@@ -34,6 +34,7 @@ class CustomInput
             if ($structureItem->unrestrict || !$unrestrictOnly)
                 $result .= $structureItem->getHtmlFormattedContent();
         $result .= "</table>";
+        return $result;
     }
 
     function getJSONStructure() {

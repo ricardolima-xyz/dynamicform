@@ -11,7 +11,7 @@
 <h2>Step 3 - Input validation and display</h2>
 <?php
 
-require_once '../custominput.class.php';
+require_once '../dynamicform.class.php';
 $customInput = new CustomInput($_POST['s'], $_POST['c'], $_FILES['c'], 'upload/');
 $validationErrors = $customInput->validate();
 
@@ -41,11 +41,27 @@ var_dump($validationErrors);
 
 ?>
 </pre>
-<form method="post" action="step3.php" enctype="multipart/form-data">
-<div id="controls">
-<?php echo $customInput->outputControls('s', 'c'); ?>
-<button type="submit">Enviar</button>
-</div>
-</form>
+<?php if (empty($validationErrors)) { ?>
+  <h3>Inactive form</h3>
+  <form method="post" action="step3.php" enctype="multipart/form-data">
+  <div id="controls">
+  <?php echo $customInput->outputControls('s', 'c', false); ?>
+  <button type="submit">Enviar</button>
+  </div>
+  </form>
+  <h3>Table of contents - all fields</h3>
+  <?php echo $customInput->getHtmlFormattedContent(false, "tablename", "tableid"); ?>
+  <h3>Table of contents - only unrestrict fields</h3>
+  <?php echo $customInput->getHtmlFormattedContent(true, "tablename", "tableid"); ?>
+<?php } else { ?>
+  <h3>Active form - with validation error messages</h3>
+  <!-- TODO Validation error messages on form -->
+  <form method="post" action="step3.php" enctype="multipart/form-data">
+  <div id="controls">
+  <?php echo $customInput->outputControls('s', 'c'); ?>
+  <button type="submit">Enviar</button>
+  </div>
+  </form>
+<?php } ?>
 </body>
 </html>

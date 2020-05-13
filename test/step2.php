@@ -11,7 +11,7 @@
 <h2>Step 2 - Input controls</h2>
 <?php
 
-require_once '../custominput.class.php';
+require_once '../dynamicform.class.php';
 $customInput = new CustomInput($_POST['s']);
 
 ?>
