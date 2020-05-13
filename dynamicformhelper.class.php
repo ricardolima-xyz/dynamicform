@@ -1,6 +1,6 @@
 <?php
 
-class CustomInputHelper
+class DynamicFormHelper
 {
     public static function supportedFiletypes()
     {

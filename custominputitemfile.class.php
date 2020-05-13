@@ -1,5 +1,5 @@
 <?php
-require_once "custominputhelper.class.php";
+require_once "dynamicformhelper.class.php";
 require_once "custominputitem.class.php";
 require_once "dynamicformvalidationerror.class.php";
 
@@ -51,7 +51,7 @@ class CustomInputItemFile extends CustomInputItem
         {
         ";
         $result .= "
-            var filetypes = " . json_encode(array_keys(CustomInputHelper::supportedFiletypes())) . ";";
+            var filetypes = " . json_encode(array_keys(DynamicFormHelper::supportedFiletypes())) . ";";
         $result .= "
             document.getElementById('fil_dlg_{$html_id}').style.display = 'block';
             document.getElementById('fil_des_{$html_id}').value = str_{$html_id}[i].description;
@@ -71,7 +71,7 @@ class CustomInputItemFile extends CustomInputItem
         {
         ";
         $result .= "
-            var filetypes = " . json_encode(array_keys(CustomInputHelper::supportedFiletypes())) . ";";
+            var filetypes = " . json_encode(array_keys(DynamicFormHelper::supportedFiletypes())) . ";";
         $result .= "
             str_{$html_id}[i].description = document.getElementById('fil_des_{$html_id}').value;
             str_{$html_id}[i].spec.max_size = document.getElementById('fil_max_{$html_id}').value;
@@ -98,7 +98,7 @@ class CustomInputItemFile extends CustomInputItem
         <label for=\"fil_max_{$html_id}\">Tamanho máximo (MB)</label>
 		<input  id=\"fil_max_{$html_id}\" type=\"number\" min=\"0\" step=\"0.1\" value=\"0\"/>
 		<label>Tipos de arquivos</label>";
-		foreach (CustomInputHelper::supportedFiletypes() as $file_type => $file_extensions)
+		foreach (DynamicFormHelper::supportedFiletypes() as $file_type => $file_extensions)
 		{
             $result .= "
             <span>
@@ -139,7 +139,7 @@ class CustomInputItemFile extends CustomInputItem
         <input type=\"file\" name=\"{$htmlName}[{$index}]\" id=\"{$htmlName}_{$index}_input\" disabled=\"disabled\"/>
         <div style=\"font-size: 0.8rem\">Tipos de arquivos:";
         if (!empty($this->spec->file_types))
-            $result .= implode(" ", CustomInputHelper::extensions($this->spec->file_types));
+            $result .= implode(" ", DynamicFormHelper::extensions($this->spec->file_types));
         else
             $result .= " Todos ";            
         if ($this->spec->max_size)
