@@ -6,10 +6,7 @@ class DynamicFormItemBigtext extends DynamicFormItem
 {
     public function getHtmlFormattedContent()
     {
-        $result = "<tr><td>{$this->description}</td><td>";
-        $result .= htmlentities($this->content, ENT_QUOTES, 'utf-8');
-        $result .= "</td></tr>";
-        return $result;
+        return htmlentities($this->content, ENT_QUOTES, 'utf-8');
     }
     public static function getType()
     {
@@ -27,7 +24,7 @@ class DynamicFormItemBigtext extends DynamicFormItem
         <script>
         function add_bgt_{$html_id}()
 		{	
-			var item_description = prompt('".DynamicFormHelper::_('item.action.add.prompt')."');
+			var item_description = prompt('".DynamicFormHelper::_('structure.table.message.add')."');
 			if (item_description != null)
 			{
 				str_{$html_id}.push
@@ -81,7 +78,7 @@ class DynamicFormItemBigtext extends DynamicFormItem
 		</div>
         ";
         $result .= "<button type=\"button\" onclick=\"add_bgt_{$html_id}();\">";
-        $result .= DynamicFormHelper::_('item.action.add.bigtext');
+        $result .= DynamicFormHelper::_('structure.table.button.add.bigtext');
         $result .= "</button>";
         return $result;
     }

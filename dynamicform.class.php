@@ -3,7 +3,7 @@
 require_once 'dynamicformhelper.class.php';
 // TODO DO I HAVE TO LIST THEM ALL?
 require_once 'dynamicformitem.class.php';
-require_once 'dynamicformitemarray.class.php';
+require_once 'dynamicformitemgroupedtext.class.php';
 require_once 'dynamicformitembigtext.class.php';
 require_once 'dynamicformitemcheck.class.php';
 require_once 'dynamicformitemenum.class.php';
@@ -32,8 +32,12 @@ class DynamicForm
         if ($htmlId !== null) $result .= " id=\"$htmlId\"";
         $result .= ">";
         foreach ($this->structure as $structureItem)
-            if ($structureItem->unrestrict || !$unrestrictOnly)
+            if ($structureItem->unrestrict || !$unrestrictOnly) 
+            {
+                $result .= "<tr><td>{$structureItem->description}</td><td>";
                 $result .= $structureItem->getHtmlFormattedContent();
+                $result .= "</td></tr>";
+            }                
         $result .= "</table>";
         return $result;
     }
@@ -79,8 +83,6 @@ class DynamicForm
         foreach ($this->customInputItemClasses as $customInputItemClass)
             $temp[] = $customInputItemClass::getType().': \''.DynamicFormHelper::_('item.'.$customInputItemClass::getType()).'\'';
         $result .= implode(", ", $temp);
-        //    if (str_{$strName}[j].type == '{}'
-            //a: 200, b: 300
         $result  .= "};
 
         function move_item_{$strName}(i, offset)
@@ -96,7 +98,7 @@ class DynamicForm
 
 		function delete_item_{$strName}(i)
 		{
-			if(confirm('".DynamicFormHelper::_('structure.table.confirm.delete.1')."' + (i+1) + '".DynamicFormHelper::_('structure.table.confirm.delete.2')."'))
+			if(confirm('".DynamicFormHelper::_('structure.table.message.delete.1')."' + (i+1) + '".DynamicFormHelper::_('structure.table.message.delete.2')."'))
 			{
 				str_{$strName}.splice(i, 1);
 				update_table_{$strName}();
@@ -141,7 +143,7 @@ class DynamicForm
         if (!is_null($toolbarClass)) $result .= " class=\"$toolbarClass\"";
         $result .= ">";
 
-        // CustomItems add Buttons
+        // CustomItems add buttons and edit controls
         foreach ($this->customInputItemClasses as $customInputItemClass)
             $result .= $customInputItemClass::outputDynamicFormStructureAddButton($strName);
         

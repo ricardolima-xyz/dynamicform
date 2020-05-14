@@ -7,10 +7,7 @@ class DynamicFormItemEnum extends DynamicFormItem
 
     public function getHtmlFormattedContent()
     {
-        $result = "<tr><td>{$this->description}</td><td>";
-        $result .= ($this->content === '') ? '' : $this->spec->items[$this->content];
-        $result .= "</td></tr>";
-        return $result;
+        return ($this->content === '') ? '' : $this->spec->items[$this->content];
     }
 
     public static function getType()
@@ -29,7 +26,7 @@ class DynamicFormItemEnum extends DynamicFormItem
         <script>
         function add_enu_{$html_id}()
 		{	
-			var item_description = prompt('".DynamicFormHelper::_('item.action.add.prompt')."');
+			var item_description = prompt('".DynamicFormHelper::_('structure.table.message.add')."');
 			if (item_description != null)
 			{
 				str_{$html_id}.push
@@ -79,7 +76,7 @@ class DynamicFormItemEnum extends DynamicFormItem
 		</div>
         ";
         $result .= "<button type=\"button\" onclick=\"add_enu_{$html_id}();\">";
-        $result .= DynamicFormHelper::_('item.action.add.enum');
+        $result .= DynamicFormHelper::_('structure.table.button.add.enum');
         $result .= "</button>";
         return $result;
     }

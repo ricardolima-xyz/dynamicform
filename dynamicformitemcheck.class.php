@@ -6,10 +6,7 @@ class DynamicFormItemCheck extends DynamicFormItem
 {
     public function getHtmlFormattedContent()
     {
-        $result = "<tr><td>{$this->description}</td><td>";
-        $result .= ($this->content) ? DynamicFormHelper::_('item.check.checked') : DynamicFormHelper::_('item.check.unchecked');
-        $result .= "</td></tr>";
-        return $result;
+        return ($this->content) ? DynamicFormHelper::_('item.check.checked') : DynamicFormHelper::_('item.check.unchecked');
     }
 
     public static function getType()
@@ -28,7 +25,7 @@ class DynamicFormItemCheck extends DynamicFormItem
         <script>
         function add_chk{$html_id}()
 		{	
-			var item_description = prompt('".DynamicFormHelper::_('item.action.add.prompt')."');
+			var item_description = prompt('".DynamicFormHelper::_('structure.table.message.add')."');
 			if (item_description != null)
 			{
 				str_{$html_id}.push
@@ -74,7 +71,7 @@ class DynamicFormItemCheck extends DynamicFormItem
 		</div>
         ";
         $result .= "<button type=\"button\" onclick=\"add_chk{$html_id}();\">";
-        $result .= DynamicFormHelper::_('item.action.add.check');
+        $result .= DynamicFormHelper::_('structure.table.button.add.check');
         $result .= "</button>";
         return $result;
     }
