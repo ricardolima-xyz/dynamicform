@@ -24,7 +24,7 @@ class DynamicFormItemGroupedText extends DynamicFormItem
         return 'edt_grt';
     }
 
-    public static function outputDynamicFormStructureAddButton($html_id) 
+    public static function outputAddEditControls($html_id) 
     {
         $result = "
         <script>
@@ -91,17 +91,15 @@ class DynamicFormItemGroupedText extends DynamicFormItem
         <label>{$this->description}";
         if ($this->mandatory) $result .= "<small>".DynamicFormHelper::_('control.restriction.start').DynamicFormHelper::_('control.restriction.mandatory').DynamicFormHelper::_('control.restriction.end')."</small>";
         $result .= "</label>
-        <div style=\"display: grid; grid-template-columns:";
-        for ($k = 0; $k < sizeof($this->spec->items); $k++) $result .= " 2fr 5fr";
-        $result .= ";\">";
+        <div style=\"display: flex; flex-wrap: wrap; justify-content: space-between; align-items: stretch;\">";
         foreach ($this->spec->items as $j => $groupedtextItem)
 		{
             $result .= "
-            <label for=\"{$htmlName}[{$index}][{$j}]\" style=\"text-align: right;\">$groupedtextItem:&nbsp;</label>
+            <label for=\"{$htmlName}[{$index}][{$j}]\" style=\"text-align: right;\">$groupedtextItem:&nbsp;
             <input type=\"text\" name=\"{$htmlName}[{$index}][{$j}]\" id=\"{$htmlName}[{$index}][{$j}]\"";
             $result .= " value=\"".htmlentities($this->content[$j], ENT_QUOTES, 'utf-8')."\"";
             $result .= ($active) ? "" : " disabled=\"disabled\"";
-            $result .= "/>";
+            $result .= "/></label>";
 		}
         $result .= "</div>";
         return $result;

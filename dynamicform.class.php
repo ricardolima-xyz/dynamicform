@@ -3,17 +3,17 @@
 require_once 'dynamicformhelper.class.php';
 // TODO DO I HAVE TO LIST THEM ALL?
 require_once 'dynamicformitem.class.php';
-require_once 'dynamicformitemgroupedtext.class.php';
 require_once 'dynamicformitembigtext.class.php';
-require_once 'dynamicformitemcheck.class.php';
-require_once 'dynamicformitemenum.class.php';
+require_once 'dynamicformitemchoice.class.php';
+require_once 'dynamicformitemsinglechoice.class.php';
 require_once 'dynamicformitemfile.class.php';
+require_once 'dynamicformitemgroupedtext.class.php';
 require_once 'dynamicformitemtext.class.php';
 
 class DynamicForm
 {
     private $structure;
-    private $customInputItemClasses;
+    private $dynamicFormItemClasses;
 
     /**
      * Returns a human-readable HTML table with the fields and their contents
@@ -80,8 +80,8 @@ class DynamicForm
         var str_{$strName} = {$this->getJSONStructure()};
         var typesNames_{$strName} = {";
         $temp = array();
-        foreach ($this->customInputItemClasses as $customInputItemClass)
-            $temp[] = $customInputItemClass::getType().': \''.DynamicFormHelper::_('item.'.$customInputItemClass::getType()).'\'';
+        foreach ($this->dynamicFormItemClasses as $dynamicFormItemClass)
+            $temp[] = $dynamicFormItemClass::getType().': \''.DynamicFormHelper::_('item.'.$dynamicFormItemClass::getType()).'\'';
         $result .= implode(", ", $temp);
         $result  .= "};
 
@@ -127,10 +127,10 @@ class DynamicForm
 				tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"move_item_{$strName}('+j+', +1)\"><img src=\"".substr(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT']))."/icons/down.png\"/></button>';
         ";
 
-        // CustomItems edit functions
-        foreach ($this->customInputItemClasses as $customInputItemClass)
+        // DynamicInputItems edit functions
+        foreach ($this->dynamicFormItemClasses as $dynamicFormItemClass)
             $result .= "
-                if (str_{$strName}[j].type == '{$customInputItemClass::getType()}') tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"{$customInputItemClass::javascriptEditMethod()}_{$strName}('+j+')\"><img src=\"".substr(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT']))."/icons/edit.png\"/></button>';";
+                if (str_{$strName}[j].type == '{$dynamicFormItemClass::getType()}') tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"{$dynamicFormItemClass::javascriptEditMethod()}_{$strName}('+j+')\"><img src=\"".substr(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT']))."/icons/edit.png\"/></button>';";
         
         $result .= "
                 tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"delete_item_{$strName}('+j+')\"><img src=\"".substr(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT']))."/icons/delete.png\"/></button>';
@@ -144,8 +144,8 @@ class DynamicForm
         $result .= ">";
 
         // CustomItems add buttons and edit controls
-        foreach ($this->customInputItemClasses as $customInputItemClass)
-            $result .= $customInputItemClass::outputDynamicFormStructureAddButton($strName);
+        foreach ($this->dynamicFormItemClasses as $dynamicFormItemClass)
+            $result .= $dynamicFormItemClass::outputAddEditControls($strName);
         
         $result .= "
         </div>
@@ -209,10 +209,10 @@ class DynamicForm
     function __construct($structure = null, $content = null, $files = null, $uploadPath = null)
 	{
         // Loading all Declared Classes that are of type DynamicFormItem
-        $this->customInputItemClasses = array();
+        $this->dynamicFormItemClasses = array();
         foreach( get_declared_classes() as $class ){
           if( is_subclass_of( $class, 'DynamicFormItem' ) )
-            $this->customInputItemClasses[] = $class;
+            $this->dynamicFormItemClasses[] = $class;
         }
 
         // Creating DynamicFormItem's array
@@ -233,12 +233,12 @@ class DynamicForm
         // Populating DynamicFormItems array if a structure is passed
         if (!empty($structure)) {
             foreach (json_decode($structure) as $i => $structureItem) {
-                foreach ($this->customInputItemClasses as $customInputItemClass) {
-                    if ($customInputItemClass::getType() == $structureItem->type) {
+                foreach ($this->dynamicFormItemClasses as $dynamicFormItemClass) {
+                    if ($dynamicFormItemClass::getType() == $structureItem->type) {
                         $content_item = null;
                         if (isset($content[$i])) $content_item = $content[$i];
                         else if (isset($newFiles[$i])) $content_item = $newFiles[$i];
-                        $this->structure[] = new $customInputItemClass($structureItem, $content_item);                        
+                        $this->structure[] = new $dynamicFormItemClass($structureItem, $content_item);                        
                     }
                 }
             }

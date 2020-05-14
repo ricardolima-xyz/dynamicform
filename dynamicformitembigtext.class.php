@@ -18,7 +18,7 @@ class DynamicFormItemBigtext extends DynamicFormItem
         return 'edt_bgt';
     }
 
-    public static function outputDynamicFormStructureAddButton($html_id) 
+    public static function outputAddEditControls($html_id) 
     {
         $result = "
         <script>

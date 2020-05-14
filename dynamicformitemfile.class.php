@@ -23,7 +23,7 @@ class DynamicFormItemFile extends DynamicFormItem
         return 'edt_fil';
     }
 
-    public static function outputDynamicFormStructureAddButton($html_id) 
+    public static function outputAddEditControls($html_id) 
     {
         $result = "
         <script>
