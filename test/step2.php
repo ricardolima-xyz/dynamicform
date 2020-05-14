@@ -12,6 +12,8 @@
 <?php
 
 require_once '../dynamicform.class.php';
+require_once '../dynamicformhelper.class.php';
+DynamicFormHelper::$locale = "pt_BR";
 $customInput = new CustomInput($_POST['s']);
 
 ?>

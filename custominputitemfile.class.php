@@ -32,7 +32,7 @@ class CustomInputItemFile extends CustomInputItem
         <script>
         function add_fil_{$html_id}()
 		{	
-			var item_description = prompt('Digite a descrição para o novo item');
+			var item_description = prompt('".DynamicFormHelper::_('item.action.add.prompt')."');
 			if (item_description != null)
 			{
 				str_{$html_id}.push
@@ -91,13 +91,13 @@ class CustomInputItemFile extends CustomInputItem
 
         <div id=\"fil_dlg_{$html_id}\" style=\"display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4);\">
 		<div style=\"background-color: white; margin: 15% auto; padding: 20px; border: 1px solid #333; width: 80%; 	display: grid; grid-gap: 0.5em; grid-template-columns: 1fr;\">
-		<span><input type=\"checkbox\" id=\"fil_unr_{$html_id}\"/><label for=\"fil_unr_{$html_id}\">Visão irrestrita</label></span>
-		<span><input type=\"checkbox\" id=\"fil_man_{$html_id}\"/><label for=\"fil_man_{$html_id}\">Obrigatório</label></span>
-		<label for=\"fil_des_{$html_id}\">Descrição</label>
+		<span><input type=\"checkbox\" id=\"fil_unr_{$html_id}\"/><label for=\"fil_unr_{$html_id}\">".DynamicFormHelper::_('item.unrestrict')."</label></span>
+		<span><input type=\"checkbox\" id=\"fil_man_{$html_id}\"/><label for=\"fil_man_{$html_id}\">".DynamicFormHelper::_('item.mandatory')."</label></span>
+		<label for=\"fil_des_{$html_id}\">".DynamicFormHelper::_('item.description')."</label>
         <input  id=\"fil_des_{$html_id}\" type=\"text\"/>
-        <label for=\"fil_max_{$html_id}\">Tamanho máximo (MB)</label>
+        <label for=\"fil_max_{$html_id}\">".DynamicFormHelper::_('item.file.spec.maxsize')."</label>
 		<input  id=\"fil_max_{$html_id}\" type=\"number\" min=\"0\" step=\"0.1\" value=\"0\"/>
-		<label>Tipos de arquivos</label>";
+		<label>".DynamicFormHelper::_('item.file.spec.filetypes')."</label>";
 		foreach (DynamicFormHelper::supportedFiletypes() as $file_type => $file_extensions)
 		{
             $result .= "
@@ -107,13 +107,13 @@ class CustomInputItemFile extends CustomInputItem
             </span>";
 		}
         $result .= "
-        <button type=\"button\" id=\"fil_sav_{$html_id}\">Atualizar</button>
-		<button type=\"button\" onclick=\"document.getElementById('fil_dlg_{$html_id}').style.display = 'none';\">Cancelar</button>
+        <button type=\"button\" id=\"fil_sav_{$html_id}\">".DynamicFormHelper::_('item.action.save')."</button>
+		<button type=\"button\" onclick=\"document.getElementById('fil_dlg_{$html_id}').style.display = 'none';\">".DynamicFormHelper::_('item.action.cancel')."</button>
 		</div>
 		</div>
         ";
         $result .= "<button type=\"button\" onclick=\"add_fil_{$html_id}();\">";
-        $result .= "+ File";
+        $result .= DynamicFormHelper::_('item.action.add.file');
         $result .= "</button>";
         return $result;
     }
@@ -121,14 +121,19 @@ class CustomInputItemFile extends CustomInputItem
     public function outputControls($htmlName, $index, $active) {
         $result = "
         <label for=\"{$htmlName}[{$index}]\">{$this->description}";
-        if ($this->mandatory) $result .= "&nbsp;<small>(Obrigatório)</small>";
+        $requirements = array();
+        if ($this->mandatory) $requirements[] = DynamicFormHelper::_('control.restriction.mandatory');
+        if (!empty($this->spec->file_types)) $requirements[] = DynamicFormHelper::_('control.restriction.filetypes').implode(" ", DynamicFormHelper::extensions($this->spec->file_types));
+        else $requirements[] = DynamicFormHelper::_('control.restriction.filetypes').DynamicFormHelper::_('control.restriction.filetypes.all');
+        if ($this->spec->max_size) $requirements[] = DynamicFormHelper::_('control.restriction.maxsize').$this->spec->max_size.DynamicFormHelper::_('control.restriction.maxsize.megabytes');
+        if (!empty($requirements)) $result .= "<small>".DynamicFormHelper::_('control.restriction.start').implode(", ", $requirements).DynamicFormHelper::_('control.restriction.end')."</small>";
         $result .= "</label>";
         
         if ($this->content != '') $result.= "
         <div id=\"fil_info_{$htmlName}_{$index}\">
         <a href=\"{$this->content}\">{$this->content}</a>";
         if ($this->content != '' && $active) $result.= "
-        <button type=\"button\" style=\"float: right;\" onclick=\"fil_input_show_{$htmlName}_{$index}()\">Alterar</button>";
+        <button type=\"button\" style=\"float: right;\" onclick=\"fil_input_show_{$htmlName}_{$index}()\">".DynamicFormHelper::_('control.action.change')."</button>";
         if ($this->content != '') $result.= "
         <input type=\"hidden\" name=\"{$htmlName}[{$index}]\" id=\"{$htmlName}[{$index}]\" value=\"{$this->content}\"/>
         </div>
@@ -137,14 +142,6 @@ class CustomInputItemFile extends CustomInputItem
         $result .= "
         <div id=\"fil_input_{$htmlName}_{$index}\" style=\"display: none;\">
         <input type=\"file\" name=\"{$htmlName}[{$index}]\" id=\"{$htmlName}_{$index}_input\" disabled=\"disabled\"/>
-        <div style=\"font-size: 0.8rem\">Tipos de arquivos:";
-        if (!empty($this->spec->file_types))
-            $result .= implode(" ", DynamicFormHelper::extensions($this->spec->file_types));
-        else
-            $result .= " Todos ";            
-        if ($this->spec->max_size)
-            $result .=  " - Tamanho máximo: {$this->spec->max_size} MB ";
-        $result .= "</div>
         </div>
         <script>
             function fil_input_show_{$htmlName}_{$index}()
@@ -161,23 +158,6 @@ class CustomInputItemFile extends CustomInputItem
         </script>";
         return $result;
     }
-
-    // This function returns the base url of the system. This works particularly for this system
-	// since all its php codes are located on system's base folder. It depends strongly on the php
-	// code which initially calls the function, the request URI.
-    private function url()
-    {
-		//TODO: try to understand $SERVER variables to check if this routine works properly on different servers
-		$server_name = isset($_SERVER['HTTP_X_FORWARDED_SERVER']) ?  $_SERVER['HTTP_X_FORWARDED_SERVER'] : $_SERVER["SERVER_NAME"];
-		$result = sprintf("%s://%s%s", isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http', $server_name, $_SERVER['REQUEST_URI']);
-		if (true) 
-		{
-			$i = strlen($result);
-			while (substr($result, $i, 1) != "/") { $i--;}
-			$result = substr( $result, 0, $i + 1);
-		}
-		return $result;
-	}
 
     public function validate()
     {
@@ -212,7 +192,7 @@ class CustomInputItemFile extends CustomInputItem
 			$randomName = md5(uniqid(rand(), true)); // Generating a random filename
 			$extension = pathinfo($this->uploadedFile['name'], PATHINFO_EXTENSION);
 			if (move_uploaded_file($this->uploadedFile['tmp_name'], "{$this->uploadedFile['upload_path']}$randomName.$extension"))
-				$this->content = "{$this->url()}{$this->uploadedFile['upload_path']}$randomName.$extension";
+				$this->content = DynamicFormHelper::url().$this->uploadedFile['upload_path'].$randomName.$extension;
 			else
 				$validationErrors[] = DynamicFormValidationError::FILE_UPLOAD_ERROR;
 		}

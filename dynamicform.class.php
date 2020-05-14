@@ -1,5 +1,6 @@
 <?php
 
+require_once 'dynamicformhelper.class.php';
 // TODO DO I HAVE TO LIST THEM ALL?
 require_once 'custominputitem.class.php';
 require_once 'custominputitemarray.class.php';
@@ -67,12 +68,21 @@ class CustomInput
         return $result;
     }
 
-    function outputStructureTable($strName)
+    function outputStructureTable($strName, $tableClass = null, $toolbarClass = null)
     {
         $result  = "
         <!-- Begin of CustomInput's automatically generated code-->
         <script>
         var str_{$strName} = {$this->getJSONStructure()};
+        var typesNames_{$strName} = {";
+        $temp = array();
+        foreach ($this->customInputItemClasses as $customInputItemClass)
+            $temp[] = $customInputItemClass::getType().': \''.DynamicFormHelper::_('item.'.$customInputItemClass::getType()).'\'';
+        $result .= implode(", ", $temp);
+        //    if (str_{$strName}[j].type == '{}'
+            //a: 200, b: 300
+        $result  .= "};
+
         function move_item_{$strName}(i, offset)
 		{
 			if (i+offset >= str_{$strName}.length || i+offset < 0) return;
@@ -86,7 +96,7 @@ class CustomInput
 
 		function delete_item_{$strName}(i)
 		{
-			if(confirm('Você realmente deseja apagar o item na posição: ' + (i+1) + '?'))
+			if(confirm('".DynamicFormHelper::_('structure.table.confirm.delete.1')."' + (i+1) + '".DynamicFormHelper::_('structure.table.confirm.delete.2')."'))
 			{
 				str_{$strName}.splice(i, 1);
 				update_table_{$strName}();
@@ -107,27 +117,29 @@ class CustomInput
 			{ 
 				var tr = table.insertRow(-1);
 				tr.insertCell(-1).innerHTML = j+1;
-				tr.insertCell(-1).innerHTML = str_{$strName}[j].type;
+				tr.insertCell(-1).innerHTML = typesNames_{$strName}[str_{$strName}[j].type];
 				tr.insertCell(-1).innerHTML = str_{$strName}[j].description;
 				tr.insertCell(-1).innerHTML = (str_{$strName}[j].unrestrict) ? '&#8226;' : '';
 				tr.insertCell(-1).innerHTML = (str_{$strName}[j].mandatory) ? '&#8226;' : '';
-				tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"move_item_{$strName}('+j+', -1)\">UP</button></td>';
-				tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"move_item_{$strName}('+j+', +1)\">DOWN</button>';
+				tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"move_item_{$strName}('+j+', -1)\"><img src=\"".substr(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT']))."/icons/up.png\"/></button></td>';
+				tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"move_item_{$strName}('+j+', +1)\"><img src=\"".substr(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT']))."/icons/down.png\"/></button>';
         ";
 
         // CustomItems edit functions
         foreach ($this->customInputItemClasses as $customInputItemClass)
             $result .= "
-                if (str_{$strName}[j].type == '{$customInputItemClass::getType()}') tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"{$customInputItemClass::javascriptEditMethod()}_{$strName}('+j+')\">EDIT</button>';";
+                if (str_{$strName}[j].type == '{$customInputItemClass::getType()}') tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"{$customInputItemClass::javascriptEditMethod()}_{$strName}('+j+')\"><img src=\"".substr(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT']))."/icons/edit.png\"/></button>';";
         
         $result .= "
-                tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"delete_item_{$strName}('+j+')\">DELETE</button>';
+                tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"delete_item_{$strName}('+j+')\"><img src=\"".substr(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT']))."/icons/delete.png\"/></button>';
 				tr.childNodes[3].style.textAlign = 'center';
 				tr.childNodes[4].style.textAlign = 'center';
 			}
         }
         </script>
-        <div>";
+        <div";
+        if (!is_null($toolbarClass)) $result .= " class=\"$toolbarClass\"";
+        $result .= ">";
 
         // CustomItems add Buttons
         foreach ($this->customInputItemClasses as $customInputItemClass)
@@ -135,8 +147,17 @@ class CustomInput
         
         $result .= "
         </div>
-        <table id=\"structure_table_{$strName}\">
-        <thead><th>Posição</th><th>Tipo</th><th>Descrição</th><th>Visão irrestrita</th><th>Obrigatório</th><th colspan=\"4\">Opções</th></thead>
+        <table id=\"structure_table_{$strName}\"";
+        if (!is_null($tableClass)) $result .= " class=\"$tableClass\"";
+        $result .= ">
+        <thead>
+        <th>".DynamicFormHelper::_('structure.table.header.position')."</th>
+        <th>".DynamicFormHelper::_('structure.table.header.type')."</th>
+        <th>".DynamicFormHelper::_('structure.table.header.description')."</th>
+        <th>".DynamicFormHelper::_('structure.table.header.unrestrict')."</th>
+        <th>".DynamicFormHelper::_('structure.table.header.mandatory')."</th>
+        <th colspan=\"4\">".DynamicFormHelper::_('structure.table.header.options')."</th>
+        </thead>
         <tbody id=\"structure_table_body_{$strName}\"></tbody>
         </table>
         <input type=\"hidden\" name=\"{$strName}\" id=\"field_{$strName}\"/>

@@ -27,7 +27,7 @@ class CustomInputItemBigtext extends CustomInputItem
         <script>
         function add_bgt_{$html_id}()
 		{	
-			var item_description = prompt('Digite a descrição para o novo item');
+			var item_description = prompt('".DynamicFormHelper::_('item.action.add.prompt')."');
 			if (item_description != null)
 			{
 				str_{$html_id}.push
@@ -67,21 +67,21 @@ class CustomInputItemBigtext extends CustomInputItem
 
         <div id=\"bgt_dlg_{$html_id}\" style=\"display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4);\">
 		<div style=\"background-color: white; margin: 15% auto; padding: 20px; border: 1px solid #333; width: 80%; 	display: grid; grid-gap: 0.5em; grid-template-columns: 1fr;\">
-		<span><input type=\"checkbox\" id=\"bgt_uvi_{$html_id}\"/><label for=\"bgt_uvi_{$html_id}\">Visão irrestrita</label></span>
-		<span><input type=\"checkbox\" id=\"bgt_man_{$html_id}\"/><label for=\"bgt_man_{$html_id}\">Obrigatório</label></span>
-		<label for=\"bgt_des_{$html_id}\">Descrição</label>
+		<span><input type=\"checkbox\" id=\"bgt_uvi_{$html_id}\"/><label for=\"bgt_uvi_{$html_id}\">".DynamicFormHelper::_('item.unrestrict')."</label></span>
+		<span><input type=\"checkbox\" id=\"bgt_man_{$html_id}\"/><label for=\"bgt_man_{$html_id}\">".DynamicFormHelper::_('item.mandatory')."</label></span>
+		<label for=\"bgt_des_{$html_id}\">".DynamicFormHelper::_('item.description')."</label>
 		<input  id=\"bgt_des_{$html_id}\" type=\"text\"/>
-		<label for=\"bgt_min_{$html_id}\">Mínimo de palavras</label>
+		<label for=\"bgt_min_{$html_id}\">".DynamicFormHelper::_('item.bigtext.spec.minwords')."</label>
 		<input  id=\"bgt_min_{$html_id}\" type=\"number\" min=\"0\" step=\"1\" value=\"0\"/>
-		<label for=\"bgt_max_{$html_id}\">Máximo de palavras</label>
+		<label for=\"bgt_max_{$html_id}\">".DynamicFormHelper::_('item.bigtext.spec.maxwords')."</label>
 		<input  id=\"bgt_max_{$html_id}\" type=\"number\" min=\"0\" step=\"1\" value=\"0\"/>
-		<button type=\"button\" id=\"bgt_sav_{$html_id}\">Atualizar</button>
-		<button type=\"button\" onclick=\"document.getElementById('bgt_dlg_{$html_id}').style.display = 'none';\">Cancelar</button>
+		<button type=\"button\" id=\"bgt_sav_{$html_id}\">".DynamicFormHelper::_('item.action.save')."</button>
+		<button type=\"button\" onclick=\"document.getElementById('bgt_dlg_{$html_id}').style.display = 'none';\">".DynamicFormHelper::_('item.action.cancel')."</button>
 		</div>
 		</div>
         ";
         $result .= "<button type=\"button\" onclick=\"add_bgt_{$html_id}();\">";
-        $result .= "+ Big Text";
+        $result .= DynamicFormHelper::_('item.action.add.bigtext');
         $result .= "</button>";
         return $result;
     }
@@ -91,10 +91,10 @@ class CustomInputItemBigtext extends CustomInputItem
         <span>
         <label for=\"{$htmlName}[{$index}]\">{$this->description}";
         $requirements = array();
-        if ($this->mandatory) $requirements[] = "Obrigatório";
-        if ($this->spec->min_words) $requirements[] = "Min. palavras: ".$this->spec->min_words;
-        if ($this->spec->max_words) $requirements[] = "Máx. palavras: ".$this->spec->max_words;
-        if (!empty($requirements)) $result .= "&nbsp;<small>(".implode(", ", $requirements).")</small>";
+        if ($this->mandatory) $requirements[] = DynamicFormHelper::_('control.restriction.mandatory');
+        if ($this->spec->min_words) $requirements[] = DynamicFormHelper::_('control.restriction.minwords').$this->spec->min_words;
+        if ($this->spec->max_words) $requirements[] = DynamicFormHelper::_('control.restriction.maxwords').$this->spec->max_words;
+        if (!empty($requirements)) $result .= "<small>".DynamicFormHelper::_('control.restriction.start').implode(", ", $requirements).DynamicFormHelper::_('control.restriction.end')."</small>";
         $result .= "</label>
         <span id=\"bgt_inf_{$htmlName}_{$index}\" style=\"float: right; font-size: 0.8rem\">
         <label id=\"bgt_cnt_{$htmlName}_{$index}\"></label>

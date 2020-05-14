@@ -29,7 +29,7 @@ class CustomInputItemText extends CustomInputItem
         <script>
         function add_tex{$html_id}()
 		{	
-			var item_description = prompt('Digite a descrição para o novo item');
+			var item_description = prompt('".DynamicFormHelper::_('item.action.add.prompt')."');
 			if (item_description != null)
 			{
 				str_{$html_id}.push
@@ -65,17 +65,17 @@ class CustomInputItemText extends CustomInputItem
 
         <div id=\"tex_dlg_{$html_id}\" style=\"display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4);\">
 		<div style=\"background-color: white; margin: 15% auto; padding: 20px; border: 1px solid #333; width: 80%; 	display: grid; grid-gap: 0.5em; grid-template-columns: 1fr;\">
-		<span><input type=\"checkbox\" id=\"tex_unr_{$html_id}\"/><label for=\"tex_unr_{$html_id}\">Visão irrestrita</label></span>
-		<span><input type=\"checkbox\" id=\"tex_man_{$html_id}\"/><label for=\"tex_man_{$html_id}\">Obrigatório</label></span>
-		<label for=\"tex_des_{$html_id}\">Descrição</label>
+		<span><input type=\"checkbox\" id=\"tex_unr_{$html_id}\"/><label for=\"tex_unr_{$html_id}\">".DynamicFormHelper::_('item.unrestrict')."</label></span>
+		<span><input type=\"checkbox\" id=\"tex_man_{$html_id}\"/><label for=\"tex_man_{$html_id}\">".DynamicFormHelper::_('item.mandatory')."</label></span>
+		<label for=\"tex_des_{$html_id}\">".DynamicFormHelper::_('item.description')."</label>
 		<input  id=\"tex_des_{$html_id}\" type=\"text\"/>
-		<button type=\"button\" id=\"tex_sav_{$html_id}\">Atualizar</button>
-		<button type=\"button\" onclick=\"document.getElementById('tex_dlg_{$html_id}').style.display = 'none';\">Cancelar</button>
+		<button type=\"button\" id=\"tex_sav_{$html_id}\">".DynamicFormHelper::_('item.action.save')."</button>
+		<button type=\"button\" onclick=\"document.getElementById('tex_dlg_{$html_id}').style.display = 'none';\">".DynamicFormHelper::_('item.action.cancel')."</button>
 		</div>
 		</div>
         ";
         $result .= "<button type=\"button\" onclick=\"add_tex{$html_id}();\">";
-        $result .= "+ Text";
+        $result .= DynamicFormHelper::_('item.action.add.text');
         $result .= "</button>";
         return $result;
     }
@@ -83,7 +83,7 @@ class CustomInputItemText extends CustomInputItem
     public function outputControls($htmlName, $index, $active) {
         $result = "
         <label for=\"{$htmlName}[{$index}]\">{$this->description}";
-        if ($this->mandatory) $result .= "&nbsp;<small>(Obrigatório)</small>";
+        if ($this->mandatory) $result .= "<small>".DynamicFormHelper::_('control.restriction.start').DynamicFormHelper::_('control.restriction.mandatory').DynamicFormHelper::_('control.restriction.end')."</small>";
         $result .= "</label>
         <input type=\"text\" name=\"{$htmlName}[{$index}]\" id=\"{$htmlName}[{$index}]\"";
         $result .= "value=\"".htmlentities($this->content, ENT_QUOTES, 'utf-8')."\"";

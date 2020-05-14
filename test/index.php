@@ -12,6 +12,8 @@
 <?php
 
 require_once '../dynamicform.class.php';
+require_once '../dynamicformhelper.class.php';
+
 // Test structure
 $structureJSON = '
 [
@@ -22,6 +24,7 @@ $structureJSON = '
     {"type":"check","description":"This is a checkbox field","unrestrict":true,"mandatory":true,"spec":null},
     {"type":"file","description":"This is a file field","unrestrict":true,"mandatory":true,"spec":{"file_types":["application/pdf","image/jpeg","image/bmp","application/vnd.openxmlformats-officedocument.wordprocessingml.document","application/vnd.ms-powerpoint"],"max_size":42}}
 ]';
+DynamicFormHelper::$locale = "pt_BR";
 $customInput = new CustomInput($structureJSON);
 
 ?>
