@@ -25,7 +25,7 @@ $structureJSON = '
     {"type":"file","description":"This is a file field","unrestrict":true,"mandatory":true,"spec":{"file_types":["application/pdf","image/jpeg","image/bmp","application/vnd.openxmlformats-officedocument.wordprocessingml.document","application/vnd.ms-powerpoint"],"max_size":42}}
 ]';
 DynamicFormHelper::$locale = "pt_BR";
-$customInput = new CustomInput($structureJSON);
+$customInput = new DynamicForm($structureJSON);
 
 ?>
 <script>

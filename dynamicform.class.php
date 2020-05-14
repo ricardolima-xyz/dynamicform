@@ -2,15 +2,15 @@
 
 require_once 'dynamicformhelper.class.php';
 // TODO DO I HAVE TO LIST THEM ALL?
-require_once 'custominputitem.class.php';
-require_once 'custominputitemarray.class.php';
-require_once 'custominputitembigtext.class.php';
-require_once 'custominputitemcheck.class.php';
-require_once 'custominputitemenum.class.php';
-require_once 'custominputitemfile.class.php';
-require_once 'custominputitemtext.class.php';
+require_once 'dynamicformitem.class.php';
+require_once 'dynamicformitemarray.class.php';
+require_once 'dynamicformitembigtext.class.php';
+require_once 'dynamicformitemcheck.class.php';
+require_once 'dynamicformitemenum.class.php';
+require_once 'dynamicformitemfile.class.php';
+require_once 'dynamicformitemtext.class.php';
 
-class CustomInput
+class DynamicForm
 {
     private $structure;
     private $customInputItemClasses;
@@ -59,19 +59,19 @@ class CustomInput
     function outputControls($strName, $cntName, $active = true)
     {
         $result  = "
-        <!-- Begin of CustomInput's automatically generated code-->
+        <!-- Begin of DynamicForm's automatically generated code-->
         <input type=\"hidden\" name=\"$strName\" value=\"".htmlentities($this->getJSONStructure())."\" />";
         foreach ($this->structure as $index => $structureItem)
             $result .= $structureItem->outputControls($cntName, $index, $active);
         $result .= "
-        <!-- End of CustomInput's automatically generated code-->";
+        <!-- End of DynamicForm's automatically generated code-->";
         return $result;
     }
 
     function outputStructureTable($strName, $tableClass = null, $toolbarClass = null)
     {
         $result  = "
-        <!-- Begin of CustomInput's automatically generated code-->
+        <!-- Begin of DynamicForm's automatically generated code-->
         <script>
         var str_{$strName} = {$this->getJSONStructure()};
         var typesNames_{$strName} = {";
@@ -143,7 +143,7 @@ class CustomInput
 
         // CustomItems add Buttons
         foreach ($this->customInputItemClasses as $customInputItemClass)
-            $result .= $customInputItemClass::outputCustomInputStructureAddButton($strName);
+            $result .= $customInputItemClass::outputDynamicFormStructureAddButton($strName);
         
         $result .= "
         </div>
@@ -165,7 +165,7 @@ class CustomInput
         update_table_{$strName}();
         update_field_{$strName}();
         </script>
-        <!-- End of CustomInput's automatically generated code -->";
+        <!-- End of DynamicForm's automatically generated code -->";
         return $result;        
     }
 
@@ -206,14 +206,14 @@ class CustomInput
      */
     function __construct($structure = null, $content = null, $files = null, $uploadPath = null)
 	{
-        // Loading all Declared Classes that are of type CustomInputItem
+        // Loading all Declared Classes that are of type DynamicFormItem
         $this->customInputItemClasses = array();
         foreach( get_declared_classes() as $class ){
-          if( is_subclass_of( $class, 'CustomInputItem' ) )
+          if( is_subclass_of( $class, 'DynamicFormItem' ) )
             $this->customInputItemClasses[] = $class;
         }
 
-        // Creating CustomInputItem's array
+        // Creating DynamicFormItem's array
         $this->structure = array();
 
         // Reading $files and organizing its information
@@ -228,7 +228,7 @@ class CustomInput
                 }
         }
         
-        // Populating CustomInputItems array if a structure is passed
+        // Populating DynamicFormItems array if a structure is passed
         if (!empty($structure)) {
             foreach (json_decode($structure) as $i => $structureItem) {
                 foreach ($this->customInputItemClasses as $customInputItemClass) {

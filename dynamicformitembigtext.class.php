@@ -1,8 +1,8 @@
 <?php
-require_once "custominputitem.class.php";
+require_once "dynamicformitem.class.php";
 require_once "dynamicformvalidationerror.class.php";
 
-class CustomInputItemBigtext extends CustomInputItem
+class DynamicFormItemBigtext extends DynamicFormItem
 {
     public function getHtmlFormattedContent()
     {
@@ -21,7 +21,7 @@ class CustomInputItemBigtext extends CustomInputItem
         return 'edt_bgt';
     }
 
-    public static function outputCustomInputStructureAddButton($html_id) 
+    public static function outputDynamicFormStructureAddButton($html_id) 
     {
         $result = "
         <script>

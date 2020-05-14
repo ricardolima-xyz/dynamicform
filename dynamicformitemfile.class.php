@@ -1,9 +1,9 @@
 <?php
 require_once "dynamicformhelper.class.php";
-require_once "custominputitem.class.php";
+require_once "dynamicformitem.class.php";
 require_once "dynamicformvalidationerror.class.php";
 
-class CustomInputItemFile extends CustomInputItem
+class DynamicFormItemFile extends DynamicFormItem
 {
 
     private $uploadedFile;
@@ -26,7 +26,7 @@ class CustomInputItemFile extends CustomInputItem
         return 'edt_fil';
     }
 
-    public static function outputCustomInputStructureAddButton($html_id) 
+    public static function outputDynamicFormStructureAddButton($html_id) 
     {
         $result = "
         <script>
