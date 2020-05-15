@@ -32,7 +32,7 @@ class DynamicFormItemChoice extends DynamicFormItem
 				({
 					type:'".self::getType()."',
 					description:item_description,
-					unrestrict:true,
+					customattribute:'',
 					mandatory:true,
 					spec:null
 				});
@@ -44,14 +44,14 @@ class DynamicFormItemChoice extends DynamicFormItem
         {
             document.getElementById('cho_dlg_{$html_id}').style.display = 'block';
             document.getElementById('cho_des_{$html_id}').value = str_{$html_id}[i].description;
-            document.getElementById('cho_unr_{$html_id}').checked = str_{$html_id}[i].unrestrict;
+            document.getElementById('cho_cat_{$html_id}').value = str_{$html_id}[i].customattribute;
             document.getElementById('cho_man_{$html_id}').checked = str_{$html_id}[i].mandatory;
             document.getElementById('cho_sav_{$html_id}').onclick = function(){sav_cho_{$html_id}(i);};
         }
         function sav_cho_{$html_id}(i)
         {
-			str_{$html_id}[i].description = document.getElementById('cho_des_{$html_id}').value;
-			str_{$html_id}[i].unrestrict = document.getElementById('cho_unr_{$html_id}').checked;
+            str_{$html_id}[i].description = document.getElementById('cho_des_{$html_id}').value;
+            str_{$html_id}[i].customattribute = document.getElementById('cho_cat_{$html_id}').value;
 			str_{$html_id}[i].mandatory = document.getElementById('cho_man_{$html_id}').checked;
 			document.getElementById('cho_dlg_{$html_id}').style.display = 'none';
 			update_table_{$html_id}();
@@ -61,10 +61,11 @@ class DynamicFormItemChoice extends DynamicFormItem
 
         <div id=\"cho_dlg_{$html_id}\" style=\"display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4);\">
 		<div style=\"background-color: white; margin: 15% auto; padding: 20px; border: 1px solid #333; width: 80%; 	display: grid; grid-gap: 0.5em; grid-template-columns: 1fr;\">
-		<span><input type=\"checkbox\" id=\"cho_unr_{$html_id}\"/><label for=\"cho_unr_{$html_id}\">".DynamicFormHelper::_('item.unrestrict')."</label></span>
 		<span><input type=\"checkbox\" id=\"cho_man_{$html_id}\"/><label for=\"cho_man_{$html_id}\">".DynamicFormHelper::_('item.mandatory')."</label></span>
 		<label for=\"cho_des_{$html_id}\">".DynamicFormHelper::_('item.description')."</label>
-		<input  id=\"cho_des_{$html_id}\" type=\"text\"/>
+        <input  id=\"cho_des_{$html_id}\" type=\"text\"/>
+        <label for=\"cho_cat_{$html_id}\">".DynamicFormHelper::_('item.customattribute')."</label>
+		<input  id=\"cho_cat_{$html_id}\" type=\"text\"/>
 		<button type=\"button\" id=\"cho_sav_{$html_id}\">".DynamicFormHelper::_('item.action.save')."</button>
 		<button type=\"button\" onclick=\"document.getElementById('cho_dlg_{$html_id}').style.display = 'none';\">".DynamicFormHelper::_('item.action.cancel')."</button>
 		</div>

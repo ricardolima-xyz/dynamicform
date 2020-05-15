@@ -31,7 +31,7 @@ class DynamicFormItemBigtext extends DynamicFormItem
 				({
 					type:'".self::getType()."',
 					description:item_description,
-					unrestrict:true,
+					customattribute:'',
 					mandatory:true,
 					spec:{min_words:0, max_words:0}
 				});
@@ -43,18 +43,18 @@ class DynamicFormItemBigtext extends DynamicFormItem
         {
             document.getElementById('bgt_dlg_{$html_id}').style.display = 'block';
             document.getElementById('bgt_des_{$html_id}').value = str_{$html_id}[i].description;
+            document.getElementById('bgt_cat_{$html_id}').value = str_{$html_id}[i].customattribute;
             document.getElementById('bgt_min_{$html_id}').value = str_{$html_id}[i].spec.min_words;
             document.getElementById('bgt_max_{$html_id}').value = str_{$html_id}[i].spec.max_words;
-            document.getElementById('bgt_uvi_{$html_id}').checked = str_{$html_id}[i].unrestrict;
             document.getElementById('bgt_man_{$html_id}').checked = str_{$html_id}[i].mandatory;
             document.getElementById('bgt_sav_{$html_id}').onclick = function(){sav_bgt_{$html_id}(i);};
         }
         function sav_bgt_{$html_id}(i)
         {
-			str_{$html_id}[i].description = document.getElementById('bgt_des_{$html_id}').value;
+            str_{$html_id}[i].description = document.getElementById('bgt_des_{$html_id}').value;
+            str_{$html_id}[i].customattribute = document.getElementById('bgt_cat_{$html_id}').value;
 			str_{$html_id}[i].spec.min_words = document.getElementById('bgt_min_{$html_id}').value;
 			str_{$html_id}[i].spec.max_words = document.getElementById('bgt_max_{$html_id}').value;
-			str_{$html_id}[i].unrestrict = document.getElementById('bgt_uvi_{$html_id}').checked;
 			str_{$html_id}[i].mandatory = document.getElementById('bgt_man_{$html_id}').checked;
 			document.getElementById('bgt_dlg_{$html_id}').style.display = 'none';
 			update_table_{$html_id}();
@@ -64,10 +64,11 @@ class DynamicFormItemBigtext extends DynamicFormItem
 
         <div id=\"bgt_dlg_{$html_id}\" style=\"display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4);\">
 		<div style=\"background-color: white; margin: 15% auto; padding: 20px; border: 1px solid #333; width: 80%; 	display: grid; grid-gap: 0.5em; grid-template-columns: 1fr;\">
-		<span><input type=\"checkbox\" id=\"bgt_uvi_{$html_id}\"/><label for=\"bgt_uvi_{$html_id}\">".DynamicFormHelper::_('item.unrestrict')."</label></span>
 		<span><input type=\"checkbox\" id=\"bgt_man_{$html_id}\"/><label for=\"bgt_man_{$html_id}\">".DynamicFormHelper::_('item.mandatory')."</label></span>
 		<label for=\"bgt_des_{$html_id}\">".DynamicFormHelper::_('item.description')."</label>
-		<input  id=\"bgt_des_{$html_id}\" type=\"text\"/>
+        <input  id=\"bgt_des_{$html_id}\" type=\"text\"/>
+        <label for=\"bgt_cat_{$html_id}\">".DynamicFormHelper::_('item.customattribute')."</label>
+		<input  id=\"bgt_cat_{$html_id}\" type=\"text\"/>
 		<label for=\"bgt_min_{$html_id}\">".DynamicFormHelper::_('item.bigtext.spec.minwords')."</label>
 		<input  id=\"bgt_min_{$html_id}\" type=\"number\" min=\"0\" step=\"1\" value=\"0\"/>
 		<label for=\"bgt_max_{$html_id}\">".DynamicFormHelper::_('item.bigtext.spec.maxwords')."</label>

@@ -33,7 +33,7 @@ class DynamicFormItemText extends DynamicFormItem
 				({
 					type:'".self::getType()."',
 					description:item_description,
-					unrestrict:true,
+					customattribute:'',
 					mandatory:true,
 					spec:null
 				});
@@ -45,14 +45,14 @@ class DynamicFormItemText extends DynamicFormItem
         {
             document.getElementById('tex_dlg_{$html_id}').style.display = 'block';
             document.getElementById('tex_des_{$html_id}').value = str_{$html_id}[i].description;
-            document.getElementById('tex_unr_{$html_id}').checked = str_{$html_id}[i].unrestrict;
+            document.getElementById('tex_cat_{$html_id}').value = str_{$html_id}[i].customattribute;
             document.getElementById('tex_man_{$html_id}').checked = str_{$html_id}[i].mandatory;
             document.getElementById('tex_sav_{$html_id}').onclick = function(){sav_tex_{$html_id}(i);};
         }
         function sav_tex_{$html_id}(i)
         {
-			str_{$html_id}[i].description = document.getElementById('tex_des_{$html_id}').value;
-			str_{$html_id}[i].unrestrict = document.getElementById('tex_unr_{$html_id}').checked;
+            str_{$html_id}[i].description = document.getElementById('tex_des_{$html_id}').value;
+            str_{$html_id}[i].customattribute = document.getElementById('tex_cat_{$html_id}').value;
 			str_{$html_id}[i].mandatory = document.getElementById('tex_man_{$html_id}').checked;
 			document.getElementById('tex_dlg_{$html_id}').style.display = 'none';
 			update_table_{$html_id}();
@@ -62,10 +62,11 @@ class DynamicFormItemText extends DynamicFormItem
 
         <div id=\"tex_dlg_{$html_id}\" style=\"display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4);\">
 		<div style=\"background-color: white; margin: 15% auto; padding: 20px; border: 1px solid #333; width: 80%; 	display: grid; grid-gap: 0.5em; grid-template-columns: 1fr;\">
-		<span><input type=\"checkbox\" id=\"tex_unr_{$html_id}\"/><label for=\"tex_unr_{$html_id}\">".DynamicFormHelper::_('item.unrestrict')."</label></span>
 		<span><input type=\"checkbox\" id=\"tex_man_{$html_id}\"/><label for=\"tex_man_{$html_id}\">".DynamicFormHelper::_('item.mandatory')."</label></span>
 		<label for=\"tex_des_{$html_id}\">".DynamicFormHelper::_('item.description')."</label>
-		<input  id=\"tex_des_{$html_id}\" type=\"text\"/>
+        <input  id=\"tex_des_{$html_id}\" type=\"text\"/>
+        <label for=\"tex_cat_{$html_id}\">".DynamicFormHelper::_('item.customattribute')."</label>
+		<input  id=\"tex_cat_{$html_id}\" type=\"text\"/>
 		<button type=\"button\" id=\"tex_sav_{$html_id}\">".DynamicFormHelper::_('item.action.save')."</button>
 		<button type=\"button\" onclick=\"document.getElementById('tex_dlg_{$html_id}').style.display = 'none';\">".DynamicFormHelper::_('item.action.cancel')."</button>
 		</div>

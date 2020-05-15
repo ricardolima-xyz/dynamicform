@@ -33,7 +33,7 @@ class DynamicFormItemSingleChoice extends DynamicFormItem
 				({
 					type:'".self::getType()."',
 					description:item_description,
-					unrestrict:true,
+					customattribute:'',
 					mandatory:true,
 					spec:{items:[]}
 				});
@@ -45,16 +45,16 @@ class DynamicFormItemSingleChoice extends DynamicFormItem
         {
             document.getElementById('sch_dlg_{$html_id}').style.display = 'block';
             document.getElementById('sch_des_{$html_id}').value = str_{$html_id}[i].description;
+            document.getElementById('sch_cat_{$html_id}').value = str_{$html_id}[i].customattribute;
             document.getElementById('sch_itm_{$html_id}').value = str_{$html_id}[i].spec.items.join('\\n');
-            document.getElementById('sch_unr_{$html_id}').checked = str_{$html_id}[i].unrestrict;
             document.getElementById('sch_man_{$html_id}').checked = str_{$html_id}[i].mandatory;
             document.getElementById('sch_sav_{$html_id}').onclick = function(){sav_sch_{$html_id}(i);};
         }
         function sav_sch_{$html_id}(i)
         {
             str_{$html_id}[i].description = document.getElementById('sch_des_{$html_id}').value;
+            str_{$html_id}[i].customattribute = document.getElementById('sch_cat_{$html_id}').value;
             str_{$html_id}[i].spec.items = document.getElementById('sch_itm_{$html_id}').value.split('\\n');
-			str_{$html_id}[i].unrestrict = document.getElementById('sch_unr_{$html_id}').checked;
 			str_{$html_id}[i].mandatory = document.getElementById('sch_man_{$html_id}').checked;
 			document.getElementById('sch_dlg_{$html_id}').style.display = 'none';
 			update_table_{$html_id}();
@@ -64,10 +64,11 @@ class DynamicFormItemSingleChoice extends DynamicFormItem
 
         <div id=\"sch_dlg_{$html_id}\" style=\"display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4);\">
 		<div style=\"background-color: white; margin: 15% auto; padding: 20px; border: 1px solid #333; width: 80%; 	display: grid; grid-gap: 0.5em; grid-template-columns: 1fr;\">
-		<span><input type=\"checkbox\" id=\"sch_unr_{$html_id}\"/><label for=\"sch_unr_{$html_id}\">".DynamicFormHelper::_('item.unrestrict')."</label></span>
 		<span><input type=\"checkbox\" id=\"sch_man_{$html_id}\"/><label for=\"sch_man_{$html_id}\">".DynamicFormHelper::_('item.mandatory')."</label></span>
 		<label for=\"sch_des_{$html_id}\">".DynamicFormHelper::_('item.description')."</label>
         <input  id=\"sch_des_{$html_id}\" type=\"text\"/>
+        <label for=\"sch_cat_{$html_id}\">".DynamicFormHelper::_('item.customattribute')."</label>
+        <input  id=\"sch_cat_{$html_id}\" type=\"text\"/>
         <label for=\"sch_itm_{$html_id}\">".DynamicFormHelper::_('item.singlechoice.spec.items')." <small>".DynamicFormHelper::_('item.singlechoice.spec.items.help')."</small></label>
 		<textarea id=\"sch_itm_{$html_id}\" rows=\"3\"></textarea>
 		<button type=\"button\" id=\"sch_sav_{$html_id}\">".DynamicFormHelper::_('item.action.save')."</button>
