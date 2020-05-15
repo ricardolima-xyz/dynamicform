@@ -3,12 +3,14 @@
 require_once 'dynamicformhelper.class.php';
 // TODO DO I HAVE TO LIST THEM ALL?
 require_once 'dynamicformitem.class.php';
+require_once 'dynamicformitemtext.class.php';
 require_once 'dynamicformitembigtext.class.php';
+require_once 'dynamicformitemgroupedtext.class.php';
 require_once 'dynamicformitemchoice.class.php';
 require_once 'dynamicformitemsinglechoice.class.php';
+require_once 'dynamicformitemmultiplechoice.class.php';
 require_once 'dynamicformitemfile.class.php';
-require_once 'dynamicformitemgroupedtext.class.php';
-require_once 'dynamicformitemtext.class.php';
+
 
 class DynamicForm
 {
