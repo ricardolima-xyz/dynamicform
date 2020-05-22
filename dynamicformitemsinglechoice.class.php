@@ -109,7 +109,7 @@ class DynamicFormItemSingleChoice extends DynamicFormItem
     public function validate()
     {
         $validationErrors = array();
-        if ($this->mandatory && $this->content == '')
+        if ($this->mandatory && $this->content === '')
             $validationErrors[] = DynamicFormValidationError::MANDATORY;
         return $validationErrors;
     }
