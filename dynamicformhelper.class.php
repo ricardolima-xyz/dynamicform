@@ -76,7 +76,7 @@ class DynamicFormHelper
      *
      * @return string             Path leading from $frompath to $topath
      */
-    function find_relative_path ( $frompath, $topath ) 
+    static function find_relative_path($frompath, $topath) 
     {
         $from = explode( DIRECTORY_SEPARATOR, $frompath ); // Folders/File
         $to = explode( DIRECTORY_SEPARATOR, $topath ); // Folders/File
