@@ -149,17 +149,17 @@ class DynamicForm
                 tr.insertCell(-1).innerHTML = str_{$strName}[j].description;
                 tr.insertCell(-1).innerHTML = str_{$strName}[j].customattribute;
 				tr.insertCell(-1).innerHTML = (str_{$strName}[j].mandatory) ? '&#8226;' : '';
-				tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"move_item_{$strName}('+j+', -1)\">{$this->upButton}</button></td>';
-				tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"move_item_{$strName}('+j+', +1)\">{$this->downButton}</button>';
+				tr.insertCell(-1).innerHTML = '<button type=\"button\" style=\"background-color:Transparent;border:none;outline:none;\" onclick=\"move_item_{$strName}('+j+', -1)\">{$this->upButton}</button></td>';
+				tr.insertCell(-1).innerHTML = '<button type=\"button\" style=\"background-color:Transparent;border:none;outline:none;\" onclick=\"move_item_{$strName}('+j+', +1)\">{$this->downButton}</button>';
         ";
 
         // DynamicInputItems edit functions
         foreach ($this->dynamicFormItemClasses as $dynamicFormItemClass)
             $result .= "
-                if (str_{$strName}[j].type == '{$dynamicFormItemClass::getType()}') tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"{$dynamicFormItemClass::javascriptEditMethod()}_{$strName}('+j+')\">{$this->editButton}</button>';";
+                if (str_{$strName}[j].type == '{$dynamicFormItemClass::getType()}') tr.insertCell(-1).innerHTML = '<button type=\"button\" style=\"background-color:Transparent;border:none;outline:none;\" onclick=\"{$dynamicFormItemClass::javascriptEditMethod()}_{$strName}('+j+')\">{$this->editButton}</button>';";
         
         $result .= "
-                tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"delete_item_{$strName}('+j+')\">{$this->deleteButton}</button>';
+                tr.insertCell(-1).innerHTML = '<button type=\"button\" style=\"background-color:Transparent;border:none;outline:none;\" onclick=\"delete_item_{$strName}('+j+')\">{$this->deleteButton}</button>';
 				tr.childNodes[3].style.textAlign = 'center';
 				tr.childNodes[4].style.textAlign = 'center';
 			}
