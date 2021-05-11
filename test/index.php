@@ -28,7 +28,7 @@ $structureJSON = '
 ]';
 
 DynamicFormHelper::$locale = "pt_BR";
-$customInput = new DynamicForm($structureJSON);
+$dynamicForm = new DynamicForm($structureJSON);
 
 ?>
 <script>
@@ -52,7 +52,7 @@ var_dump($structureJSON);
 </pre>
 
 <form action="step2.php" method="post">
-<?php echo $customInput->outputStructureTable('s', 'c'); ?>
+<?php echo $dynamicForm->outputStructureTable('s'); ?>
 <button>Submit</button>
 </form>
 </body>

@@ -20,6 +20,10 @@ class DynamicForm
 {
     public  $structure;
     private $dynamicFormItemClasses;
+    private $editButton = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/></svg>';
+    private $deleteButton = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16"><path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z"/></svg>';
+    private $downButton = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"/></svg>';
+    private $upButton = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/></svg>';
 
     /**
      * Returns a human-readable HTML <table> with the fields and their contents
@@ -72,11 +76,32 @@ class DynamicForm
         return $result;
     }
 
-    function outputStructureTable($strName, $tableClass = null, $toolbarClass = null)
+    function outputStructureTable($strName)
     {
-        $path = DynamicFormHelper::find_relative_path(dirname($_SERVER['SCRIPT_FILENAME']),dirname(__FILE__));
         $result = "
         <!-- Begin of DynamicForm's automatically generated code-->
+        <div id=\"structure_toolbar_{$strName}\">";
+
+        // CustomItems add buttons and edit controls
+        foreach ($this->dynamicFormItemClasses as $dynamicFormItemClass)
+            $result .= $dynamicFormItemClass::outputAddEditControls($strName);
+        
+        $result .= "
+        </div>
+        <table id=\"structure_table_{$strName}\">
+        <thead>
+        <th>".DynamicFormHelper::_('structure.table.header.position')."</th>
+        <th>".DynamicFormHelper::_('structure.table.header.type')."</th>
+        <th>".DynamicFormHelper::_('structure.table.header.description')."</th>
+        <th>".DynamicFormHelper::_('structure.table.header.customattribute')."</th>
+        <th>".DynamicFormHelper::_('structure.table.header.mandatory')."</th>
+        <th colspan=\"4\">".DynamicFormHelper::_('structure.table.header.options')."</th>
+        </thead>
+        <tbody id=\"structure_table_body_{$strName}\"></tbody>
+        </table>
+        <input type=\"hidden\" name=\"{$strName}\" id=\"field_{$strName}\"/>";
+        $result .= "
+        
         <script>
         var str_{$strName} = {$this->getJSONStructure()};
         var typesNames_{$strName} = {";
@@ -124,47 +149,22 @@ class DynamicForm
                 tr.insertCell(-1).innerHTML = str_{$strName}[j].description;
                 tr.insertCell(-1).innerHTML = str_{$strName}[j].customattribute;
 				tr.insertCell(-1).innerHTML = (str_{$strName}[j].mandatory) ? '&#8226;' : '';
-				tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"move_item_{$strName}('+j+', -1)\"><img src=\"$path/icons/up.png\"/></button></td>';
-				tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"move_item_{$strName}('+j+', +1)\"><img src=\"$path/icons/down.png\"/></button>';
+				tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"move_item_{$strName}('+j+', -1)\">{$this->upButton}</button></td>';
+				tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"move_item_{$strName}('+j+', +1)\">{$this->downButton}</button>';
         ";
 
         // DynamicInputItems edit functions
         foreach ($this->dynamicFormItemClasses as $dynamicFormItemClass)
             $result .= "
-                if (str_{$strName}[j].type == '{$dynamicFormItemClass::getType()}') tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"{$dynamicFormItemClass::javascriptEditMethod()}_{$strName}('+j+')\"><img src=\"$path/icons/edit.png\"/></button>';";
+                if (str_{$strName}[j].type == '{$dynamicFormItemClass::getType()}') tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"{$dynamicFormItemClass::javascriptEditMethod()}_{$strName}('+j+')\">{$this->editButton}</button>';";
         
         $result .= "
-                tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"delete_item_{$strName}('+j+')\"><img src=\"$path/icons/delete.png\"/></button>';
+                tr.insertCell(-1).innerHTML = '<button type=\"button\" onclick=\"delete_item_{$strName}('+j+')\">{$this->deleteButton}</button>';
 				tr.childNodes[3].style.textAlign = 'center';
 				tr.childNodes[4].style.textAlign = 'center';
 			}
         }
-        </script>
-        <div";
-        if (!is_null($toolbarClass)) $result .= " class=\"$toolbarClass\"";
-        $result .= ">";
 
-        // CustomItems add buttons and edit controls
-        foreach ($this->dynamicFormItemClasses as $dynamicFormItemClass)
-            $result .= $dynamicFormItemClass::outputAddEditControls($strName);
-        
-        $result .= "
-        </div>
-        <table id=\"structure_table_{$strName}\"";
-        if (!is_null($tableClass)) $result .= " class=\"$tableClass\"";
-        $result .= ">
-        <thead>
-        <th>".DynamicFormHelper::_('structure.table.header.position')."</th>
-        <th>".DynamicFormHelper::_('structure.table.header.type')."</th>
-        <th>".DynamicFormHelper::_('structure.table.header.description')."</th>
-        <th>".DynamicFormHelper::_('structure.table.header.customattribute')."</th>
-        <th>".DynamicFormHelper::_('structure.table.header.mandatory')."</th>
-        <th colspan=\"4\">".DynamicFormHelper::_('structure.table.header.options')."</th>
-        </thead>
-        <tbody id=\"structure_table_body_{$strName}\"></tbody>
-        </table>
-        <input type=\"hidden\" name=\"{$strName}\" id=\"field_{$strName}\"/>
-        <script>
         update_table_{$strName}();
         update_field_{$strName}();
         </script>
