@@ -1,12 +1,30 @@
-# DynamicForm PHP
-An open source PHP Library for creating forms without HTML, whose structure can be defined by the user of your application instead of being hardcoded by the programmer.
-## An example
-Let's suppose you have an application where the users can submit form data, for example assignments or surveys. But another user (typically some kind of super user) needs to be free to define this form structure and is not supposed to know nothing about PHP, HTML, HTTP post/get requests, SQL and so on. **That's where DynamicForm comes into action.**
-## With DynamicForm you can...
-1. Let the user define the structure of the form visually
-1. After the structure is defined, display the form on screen
-1. Validate the data before storing on database, and this includes file uploads
-1. Have the form content (as well the structure) saved in your database
+# FOF - Forms on the fly!
+
+## Sometimes you need a _form_, not a `<form>`.
+
+**You, as a developer, probably know how to build `<form>` structures, but let's suppose you need to create applications where not you, but users need to create forms. It would be very conter-productive if the programmer needs to hardcode a new form every time a new one is needed. Some examples of such applications are:**
+
+- Survey systems
+- Assignment (homework) submission systems
+
+In such applications, a (super) user creates forms for other users to fill them up. **FOF makes it happen.**
+
+## Phase 1: The form structure builder
+
+To start, you need to provide a user interface for users to build forms, by using the form structure builder.
+
+- With the form structure builder, users can create their forms using different types. 
+- Externally, the form structure builder is intuitive and allows building forms with a few clicks. Internally, it stores the structure as a json string that can be easily retrieved and stored by your application.
+
+## Phase 2: The form itself
+
+Once the form structure is created, now it is time for the other users to fill up the form.
+
+- With the form structure, the library can build the form for the other users to fill.
+- The filled-up form is also represented internally by a json file, so you can easily save it on the database and manipulate it in javascript or PHP, for example.
+
+---
+
 ## Changelog
 - 2021-05-11 **(feature)** The `outputStructureTable` method now receives one parameter, the structure name `$strname`. No more parameters for classes names. If the client needs style modifications, it can do throgh the ids of elements. This function now outputs 4 HTML elements. 1: The toolbar, in a div with its own id (new), 2: the structure table with its id, 3: the HTML hidden `input` element with the value that can be used in a form, and 4: the javascript code all contained in one script tag.
 - 2021-05-11 **(feature)** Table structure icons are svgs. The function `find_relative_path` was removed, since there is no need to search for png files. There is no more http requests in the strcuture table.
