@@ -1,13 +1,13 @@
 # FOF - Forms on the fly!
 
-## Sometimes you need a _form_, not a `<form>`.
+## When you need a _form_, not a `<form>`.
 
-**You, as a developer, probably know how to build `<form>` structures, but let's suppose you need to create applications where not you, but users need to create forms. It would be very conter-productive if the programmer needs to hardcode a new form every time a new one is needed. Some examples of such applications are:**
+**You, as a developer, probably know how to build `<form>` structures, but let's suppose you are developing an application where users, by nature, need to create forms. Examples of such applications are:**
 
 - Survey systems
 - Assignment (homework) submission systems
 
-In such applications, a (super) user creates forms for other users to fill them up. **FOF makes it happen.**
+It would be very conter-productive if the programmer has to hardcode a new form every time a new one is needed. **FOF makes it happen.**
 
 ## Phase 1: The form structure builder
 
